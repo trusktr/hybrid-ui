@@ -9,8 +9,10 @@ Platform specific style
 * [ ] [Android & Chrome Apps](http://developer.android.com/design/index.html)
 * [ ] [Mac OS X](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html#//apple_ref/doc/uid/20000957-CH3-SW1)
 * [ ] [Windows](https://msdn.microsoft.com/en-us/library/windows/apps/hh202915(v=vs.105).aspx) & [winjs](http://try.buildwinjs.com/#navigation)
-* [ ] Android TV
-* [ ] Samsung TV
+* [ ] [Android TV](https://developer.android.com/design/tv/patterns.html)
+* [ ] [Tizen](https://developer.tizen.org/documentation/ux-guide)
+* [ ] [Firefox OS](https://developer.mozilla.org/en-US/Firefox_OS/Platform/Gaia)
+* [ ] [Ubuntu](http://design.ubuntu.com/apps)
 
 ## Similar Resources
 * [Rachet](http://goratchet.com/)
