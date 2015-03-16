@@ -6,7 +6,7 @@ Platform specific style
 
 ## Platform Style Documentation
 * [ ] [iOS](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556-CH66-SW1)
-* [ ] Android
+* [ ] [Android](http://developer.android.com/design/index.html)
 * [ ] [Mac OS X](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html#//apple_ref/doc/uid/20000957-CH3-SW1)
 * [ ] Windows 8
 * [ ] Windows Phone 8
@@ -15,3 +15,7 @@ Platform specific style
 * [ ] Google TV
 * [ ] Samsung TV
 * [ ] Blackberry
+
+
+## Similar Resources
+* [Rachet](http://goratchet.com/)
