@@ -4,6 +4,11 @@
 
 > Platform specific components & style
 
+## Intallation
+```
+meteor add hybrid:ui
+```
+
 ## Platform Style Documentation
 * [ ] [iOS](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556-CH66-SW1)
 * [ ] [Mac OS X](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html#//apple_ref/doc/uid/20000957-CH3-SW1)
