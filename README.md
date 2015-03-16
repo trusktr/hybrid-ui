@@ -16,3 +16,4 @@ Platform specific style
 
 ## Similar Resources
 * [Rachet](http://goratchet.com/)
+* [Ionic](http://ionicframework.com/)
