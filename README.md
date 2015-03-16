@@ -13,7 +13,7 @@ Platform specific style
 * [ ] [Ubuntu](http://design.ubuntu.com/apps)
 * [ ] [Tizen](https://developer.tizen.org/documentation/ux-guide)
 * [ ] [Firefox OS](https://developer.mozilla.org/en-US/Firefox_OS/Platform/Gaia)
-* 
+
 ## Similar Resources
 * [Rachet](http://goratchet.com/)
 * [Ionic](http://ionicframework.com/)
