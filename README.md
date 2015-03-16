@@ -10,10 +10,10 @@ Platform specific style
 * [ ] [Android & Chrome Apps](http://developer.android.com/design/index.html)
 * [ ] [Android TV](https://developer.android.com/design/tv/patterns.html)
 * [ ] [Windows](https://msdn.microsoft.com/en-us/library/windows/apps/hh202915(v=vs.105).aspx) & [winjs](http://try.buildwinjs.com/#navigation)
+* [ ] [Ubuntu](http://design.ubuntu.com/apps)
 * [ ] [Tizen](https://developer.tizen.org/documentation/ux-guide)
 * [ ] [Firefox OS](https://developer.mozilla.org/en-US/Firefox_OS/Platform/Gaia)
-* [ ] [Ubuntu](http://design.ubuntu.com/apps)
-
+* 
 ## Similar Resources
 * [Rachet](http://goratchet.com/)
 * [Ionic](http://ionicframework.com/)
