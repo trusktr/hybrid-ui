@@ -9,7 +9,7 @@ Platform specific style
 * [ ] [Android](http://developer.android.com/design/index.html)
 * [ ] [Mac OS X](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html#//apple_ref/doc/uid/20000957-CH3-SW1)
 * [ ] Windows 8
-* [ ] Windows Phone 8
+* [ ] [Windows Phone 8](https://msdn.microsoft.com/en-us/library/windows/apps/hh202915(v=vs.105).aspx)
 * [ ] Windows 10
 * [ ] Google Chrome
 * [ ] Google TV
