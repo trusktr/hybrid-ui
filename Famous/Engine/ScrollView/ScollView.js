@@ -136,8 +136,6 @@ ScrollView.prototype._watchSizeChange = function () {
  * Triggers a recalculation and transition of all of the items
  */
 ScrollView.prototype._triggerRedraw = function () {
-  console.log('_triggerRedraw');
-
   this._yPosition = 0;
 
   for(var i=0; i<this._items.length; i++) {
@@ -171,7 +169,7 @@ ScrollView.prototype._getCurrentSize = function () {
 }
 
 /**
- * Calculates the Position and Sizing properties based on possition in collection
+ * Calculates the Position and Sizing properties based on position in collection
  * @param  {[type]} position [description]
  */
 ScrollView.prototype._calculateNodeProperties = function (position) {
