@@ -12,6 +12,7 @@ var Align = require('famous/components/Align');
 var Rotation = require('famous/components/Rotation');
 var Scale = require('famous/components/Scale');
 var Size = require('famous/components/Size');
+var Opacity = require('famous/components/Opacity');
 var _ = require('lodash');
 
 // Globals
@@ -62,7 +63,7 @@ ScrollView.prototype._defaultOptions = {
   },
 
   fluid: {
-    duration: 300,
+    duration: 400,
     curve: 'easeOut'
   },
 
@@ -100,7 +101,8 @@ ScrollView.prototype._defaultOptions = {
 
     // New item settings
     newItem: {
-      position: [-400, -400]
+      position: [-400, 0],
+      rotation: [7, -2, 0]
     }
   },
 
@@ -119,7 +121,9 @@ ScrollView.prototype._defaultOptions = {
 
     // New item settings
     newItem: {
-      position: [-400, -400]
+      position: [200, -200],
+      scale: [.1, .1, 1],
+      rotation: [4, 4, 3]
     }
   }
 }
@@ -166,12 +170,15 @@ ScrollView.prototype._redrawItem = function (i) {
     curve: this.options.fluid.curve
   };
 
-  item.position.set(    p.position[0],          p.position[1],           0, t);
-  item.align.set(       p.align[0],             p.align[1],              0, t);
-  item.size
-  .setDifferential(     p.size.differential[0], p.size.differential[1],  0, t)
-  .setProportional(     p.size.proportional[0], p.size.proportional[1],  0, t)
-  .setAbsolute(         p.size.absolute[0],     p.size.absolute[1],      0, t);
+  item.opacity.halt().set(     p.opactiy,                                                      t);
+  item.rotation.halt().set(    p.rotation[0],          p.rotation[1],           p.rotation[2], t);
+  item.scale.halt().set(       p.scale[0],             p.scale[1],              1,             t);
+  item.position.halt().set(    p.position[0],          p.position[1],           0,             t);
+  item.align.halt().set(       p.align[0],             p.align[1],              0,             t);
+  item.size.halt()
+  .setDifferential(     p.size.differential[0], p.size.differential[1],  0,             t)
+  .setProportional(     p.size.proportional[0], p.size.proportional[1],  0,             t)
+  .setAbsolute(         p.size.absolute[0],     p.size.absolute[1],      0,             t);
 }
 
 
@@ -228,13 +235,16 @@ ScrollView.prototype._calculateNodeProperties = function (position) {
   // Serialize position and size state for node for transitioning
   return {
     size: {
-      mode: ['relative', 'absolute'],
-      absolute: [null, options.fixedHeight],
+      mode:         ['relative', 'absolute'],
+      absolute:     [null, options.fixedHeight],
       differential: [0, 0],
       proportional: [nodeWidth, null]
     },
-    position: [0, yPosition],
-    align: [xAlign, 0]
+    position:       [0, yPosition],
+    align:          [xAlign, 0],
+    scale:          [1, 1, 1],
+    rotation:       [0, 0, 0],
+    opacity:        1
   }
 }
 
@@ -255,12 +265,12 @@ ScrollView.prototype.insert = function (node, position) {
   } else {
     var method = 'push';
     var position = this._items.length;
-    var newItem = {
-      position: []
-    };
   }
 
   var p = this._calculateNodeProperties(position);
+  p = _.extend(p, newItem || {});
+
+  console.log(p);
 
   // Add Node to scene
   // --------------------
@@ -270,14 +280,23 @@ ScrollView.prototype.insert = function (node, position) {
   .setAbsoluteSize(     p.size.absolute[0],     p.size.absolute[1]     )
   .setDifferentialSize( p.size.differential[0], p.size.differential[1] )
   .setProportionalSize( p.size.proportional[0], p.size.proportional[1] )
-  .setPosition(         newItem.position[0] || p.position[0],  newItem.position[1] || p.position[1])
-  .setAlign(            p.align[0],             p.align[1]             );
+  .setPosition(         p.position[0],          p.position[1]          )
+  .setAlign(            p.align[0],             p.align[1]             )
+  .setScale(            p.scale[0],             p.scale[1]             , 1)
+  .setRotation(         p.rotation[0],          p.rotation[1]          )
+  .setOpacity(          p.opacity                                      );
+
+  var scale = new Scale(item);
+  scale.set(p.scale[0], p.scale[1], 1);
 
   // Store Item
   this._items[method]({
     align:    new Align(item),
     position: new Position(item),
     size:     new Size(item),
+    scale:    scale,
+    rotation: new Rotation(item),
+    opacity:  new Opacity(item),
     node:     item.addChild(node)
   });
 
