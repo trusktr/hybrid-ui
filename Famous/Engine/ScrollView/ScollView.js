@@ -22,7 +22,7 @@ var LARGE_BREAKPOINT = 1440;
 /**
  * Constructor
  *
- * options: TODO Document
+ * options: TODO Documentation
  */
 function ScrollView (options) {
   Node.call(this);
@@ -157,7 +157,7 @@ ScrollView.prototype._triggerRedraw = function () {
 
 /**
  * Gets the current screen class size
- * @return {[type]} [description]
+ * @return {String} small || medium || large
  */
 ScrollView.prototype._getCurrentSize = function () {
   var width = window.innerWidth;
@@ -169,16 +169,20 @@ ScrollView.prototype._getCurrentSize = function () {
 
 /**
  * Calculates the Position and Sizing properties based on position in collection
- * @param  {[type]} position [description]
+ * @param  {Number} position Item number in the array
+ * @return {Object}          Size, Position, and Align settings for the node
  */
 ScrollView.prototype._calculateNodeProperties = function (position) {
 
+  // Get the options for the screen size
   var options = this.options[this._currentSize];
 
+  // Y Gutter
+  // -------------------
   if (this._yPosition == 0 && options.gutter.y > 0)
     this._yPosition = options.gutter.y;
 
-  // General Grid Variable
+  // General Grid Variables
   // --------------------
   var remainder = position % options.columns;
   var yPosition = this._yPosition;
@@ -217,8 +221,10 @@ ScrollView.prototype._calculateNodeProperties = function (position) {
 
 /**
  * Insert New Item
- * @param  {[type]} node     [description]
- * @param  {[type]} position [description]
+ * @param  {Node}   node     Item to be inserted into the ScrollView
+ * @param  {Number} position Optional - position to insert the item
+ *
+ * TODO: currently position doesn't do anything -- working on this
  */
 ScrollView.prototype.insert = function (node, position) {
 
