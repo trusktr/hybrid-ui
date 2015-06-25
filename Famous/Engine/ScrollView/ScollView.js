@@ -77,7 +77,12 @@ ScrollView.prototype._defaultOptions = {
       x: 0
     },
     columns: 1,
-    fixedHeight: 400
+    fixedHeight: 400,
+
+    // New item settings
+    newItem: {
+      position: [0, -400]
+    }
   },
 
   // Medium Screen
@@ -91,7 +96,12 @@ ScrollView.prototype._defaultOptions = {
       x: .05
     },
     columns: 2,
-    fixedHeight: 300
+    fixedHeight: 300,
+
+    // New item settings
+    newItem: {
+      position: [-400, -400]
+    }
   },
 
   // Large Screen
@@ -105,7 +115,12 @@ ScrollView.prototype._defaultOptions = {
       x: .05
     },
     columns: 4,
-    fixedHeight: 200
+    fixedHeight: 200,
+
+    // New item settings
+    newItem: {
+      position: [-400, -400]
+    }
   }
 }
 
@@ -121,13 +136,13 @@ ScrollView.prototype._watchSizeChange = function () {
 
     if (x <= SMALL_BREAKPOINT && this._currentSize != 'small') {
       this._currentSize = 'small';
-      this._triggerRedraw();
+      this._redraw();
     } else if (x > SMALL_BREAKPOINT && x <= MEDIUM_BREAKPOINT && this._currentSize != 'medium') {
       this._currentSize = 'medium';
-      this._triggerRedraw();
+      this._redraw();
     } else if (x > MEDIUM_BREAKPOINT && this._currentSize != 'large') {
       this._currentSize = 'large';
-      this._triggerRedraw();
+      this._redraw();
     }
   }, 100);
 }
@@ -135,25 +150,30 @@ ScrollView.prototype._watchSizeChange = function () {
 /**
  * Triggers a recalculation and transition of all of the items
  */
-ScrollView.prototype._triggerRedraw = function () {
+ScrollView.prototype._redraw = function () {
   this._yPosition = 0;
 
   for(var i=0; i<this._items.length; i++) {
-    var item = this._items[i];
-    var p = this._calculateNodeProperties(i);
-    var t = {
-      duration: this.options.fluid.duration,
-      curve: this.options.fluid.curve
-    };
-
-    item.position.set(    p.position[0],          p.position[1],           0, t);
-    item.align.set(       p.align[0],             p.align[1],              0, t);
-    item.size
-    .setDifferential(     p.size.differential[0], p.size.differential[1],  0, t)
-    .setProportional(     p.size.proportional[0], p.size.proportional[1],  0, t)
-    .setAbsolute(         p.size.absolute[0],     p.size.absolute[1],      0, t);
+    this._redrawItem(i);
   }
 }
+
+ScrollView.prototype._redrawItem = function (i) {
+  var item = this._items[i];
+  var p = this._calculateNodeProperties(i);
+  var t = {
+    duration: this.options.fluid.duration,
+    curve: this.options.fluid.curve
+  };
+
+  item.position.set(    p.position[0],          p.position[1],           0, t);
+  item.align.set(       p.align[0],             p.align[1],              0, t);
+  item.size
+  .setDifferential(     p.size.differential[0], p.size.differential[1],  0, t)
+  .setProportional(     p.size.proportional[0], p.size.proportional[1],  0, t)
+  .setAbsolute(         p.size.absolute[0],     p.size.absolute[1],      0, t);
+}
+
 
 /**
  * Gets the current screen class size
@@ -228,12 +248,19 @@ ScrollView.prototype._calculateNodeProperties = function (position) {
  */
 ScrollView.prototype.insert = function (node, position) {
 
-  var method = 'push';
+  if (position && position === -1) {
+    var method = 'unshift';
+    var position = 0;
+    var newItem = this.options[this._currentSize].newItem;
+  } else {
+    var method = 'push';
+    var position = this._items.length;
+    var newItem = {
+      position: []
+    };
+  }
 
-  if (position === -1)
-    method = 'unshift';
-
-  var p = this._calculateNodeProperties(this._items.length);
+  var p = this._calculateNodeProperties(position);
 
   // Add Node to scene
   // --------------------
@@ -243,7 +270,7 @@ ScrollView.prototype.insert = function (node, position) {
   .setAbsoluteSize(     p.size.absolute[0],     p.size.absolute[1]     )
   .setDifferentialSize( p.size.differential[0], p.size.differential[1] )
   .setProportionalSize( p.size.proportional[0], p.size.proportional[1] )
-  .setPosition(         p.position[0],          p.position[1]          )
+  .setPosition(         newItem.position[0] || p.position[0],  newItem.position[1] || p.position[1])
   .setAlign(            p.align[0],             p.align[1]             );
 
   // Store Item
@@ -253,6 +280,9 @@ ScrollView.prototype.insert = function (node, position) {
     size:     new Size(item),
     node:     item.addChild(node)
   });
+
+  if (method == 'unshift')
+    this._redraw();
 }
 
 module.exports = ScrollView;
