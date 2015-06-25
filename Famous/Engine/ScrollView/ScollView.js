@@ -146,9 +146,8 @@ ScrollView.prototype._triggerRedraw = function () {
       curve: this.options.fluid.curve
     };
 
-    item.position.set(       p.position[0],          p.position[1],        0, t);
-    item.align.set(          p.align[0],             p.align[1],           0, t);
-
+    item.position.set(    p.position[0],          p.position[1],           0, t);
+    item.align.set(       p.align[0],             p.align[1],              0, t);
     item.size
     .setDifferential(     p.size.differential[0], p.size.differential[1],  0, t)
     .setProportional(     p.size.proportional[0], p.size.proportional[1],  0, t)
