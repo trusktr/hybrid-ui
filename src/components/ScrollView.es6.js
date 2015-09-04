@@ -1,10 +1,3 @@
-/**
- * ScrollView Component
- *
- * TODO: True Sized Items
- * TODO: Diffing data sets
- */
-
 var Node = HybridUI.engine.Node;
 var Responsive = HybridUI.components.Responsive;
 var FluidSequence = HybridUI.components.FluidSequence;
