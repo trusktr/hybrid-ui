@@ -15,6 +15,7 @@ class ListItem extends Node {
    *
    */
   constructor (properties) {
+    super();
 
     this.setClasses([CSS_CLASS_LIST_ITEM]);
 

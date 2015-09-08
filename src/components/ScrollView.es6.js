@@ -164,6 +164,7 @@ class ScrollView extends Node {
    * @constructor
    */
   constructor (options) {
+    super(options);
 
     // Add CSS class
     this.setClasses([CSS_CLASS_SCROLL_VIEW]);

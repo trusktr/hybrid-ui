@@ -16,7 +16,7 @@ class Footer extends Node {
    *
    */
   constructor (properties) {
-    super(this);
+    super(propterties);
 
     this.setClasses([CSS_CLASS_FOOTER]);
 

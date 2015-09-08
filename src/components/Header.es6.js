@@ -16,7 +16,7 @@ class Header extends Node {
    *
    */
   constructor (properties) {
-    super(this);
+    super(properties);
 
     this.setClasses([CSS_CLASS_HEADER]);
 

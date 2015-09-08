@@ -14,6 +14,7 @@ class TabBar extends Node {
    * @constructor
    */
   constructor (tabs) {
+    super();
 
     this.setClasses([CSS_CLASS_TAB_BAR]);
 

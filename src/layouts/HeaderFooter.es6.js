@@ -14,7 +14,7 @@ class HeaderFooter extends Node {
    * @constructor
    */
   constructor (options) {
-    super(this);
+    super();
 
     this.options = _.extend({
       headerSize: 74,

@@ -15,6 +15,7 @@ class Modal extends Node {
    *
    */
   constructor (properties) {
+    super(properties);
 
     this.setClasses([CSS_CLASS_MODAL]);
 

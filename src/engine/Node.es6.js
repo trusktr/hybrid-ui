@@ -1,11 +1,10 @@
 var Curve = HybridUI.engine.Curve;
+var Utility = HybridUI.engine.Utility;
 
 const CSS_CLASS_NODE = 'hybrid-dom-node';
 
 /**
  * Node Class
- *
- * @todo Add size and align properties/methods similar to famous
  *
  * @class Node
  * @return {Node} A new instance of Node
@@ -16,7 +15,6 @@ class Node extends THREE.Object3D {
    * @constructor
    */
   constructor (properties) {
-    //THREE.Object3D.call(this);
     super();
 
     // DOM representation of Node
@@ -32,7 +30,16 @@ class Node extends THREE.Object3D {
 
     // Style Cache
     this._styleCache = {
-      opacity: 1
+      opacity: 1,
+      sizes: {
+        modes: ['absolute', 'absolute'],
+        absolute: [100, 100],
+        proportional: [1, 1]
+      },
+      transform:{
+        matrix3d: [],
+        translate3d: [.5, .5, 0]
+      }
     };
 
     // Tweens
@@ -43,15 +50,14 @@ class Node extends THREE.Object3D {
       scale: null
     };
 
-    // TODO DOM writes need to be sync'd to preven layout thrashing
     Object.defineProperties(this, {
       opacity: {
         set: function (value) {
-          this._styleCache._opacity = value;
-          this.element.style.opacity = value;
+          this._styleCache.opacity = value;
+           this.applyStyle('opacity', value);
         }.bind(this),
         get: function () {
-          return this._styleCache._opacity;
+          return this._styleCache.opacity;
         }.bind(this)
       }
     });
@@ -62,7 +68,8 @@ class Node extends THREE.Object3D {
       }
     });
 
-    this.setProperties(properties);
+    if (properties)
+      this.setProperties(properties);
   }
 
   /**
@@ -171,6 +178,153 @@ class Node extends THREE.Object3D {
   }
 
   /**
+   * [setSizeModes description]
+   * @param {[type]} x [description]
+   * @param {[type]} y [description]
+   * @param {[type]} z [description]
+   */
+  setSizeModes (x, y) {
+    var modes = [x, y];
+
+    if (! _.isEqual(modes, this._styleCache.size.modes)) {
+      this._styleCache.size.modes = modes;
+      this.applySize();
+    }
+  }
+
+  /**
+   * [setAbsolute description]
+   * @param {[type]} x [description]
+   * @param {[type]} y [description]
+   */
+  setAbsoluteSize (x, y) {
+    var absolute = [x, y];
+
+    if (! _.isEqual(absolute, this._styleCache.size.absolute)) {
+      this._styleCache.size.absolute = absolute;
+
+      if (this._styleCache.size.modes.indexOf('absolute') > -1)
+        this.applySize();
+    }
+  }
+
+  /**
+   * [setProportionalSize description]
+   * @param {[type]} x [description]
+   * @param {[type]} y [description]
+   */
+  setProportionalSize (x, y) {
+    var proportional = [x, y];
+
+    if (! _.isEqual(proportional, this._styleCache.size.proportional)) {
+      this._styleCache.size.proportional = proportional;
+
+      if (this._styleCache.size.modes.indexOf('relative') > -1)
+        this.applySize();
+    }
+  }
+
+  /**
+   * [applySize description]
+   * @return {[type]}   [description]
+   */
+  applySize () {
+    var modes = this._styleCache.size.modes;
+    var absolute = this._styleCache.size.absolute;
+    var proportional = this._styleCache.size.proportional;
+
+    if (modes[0] === 'abslute')
+      this.applyStyle('width', `${absolute[0]}px`);
+    else if (modes[0] === 'relative')
+      this.applyStyle('width', `${proportional[0] * 100}%`);
+
+    if (modes[1] === 'absolute')
+      this.applyStyle('height', `${absolute[1]}px`);
+    else if (modes[1] === 'relatve')
+      this.applyStyle('height', `${proportional[1] * 100}%`);
+  }
+
+  /**
+   * [setAlign description]
+   * @param {[type]} x [description]
+   * @param {[type]} y [description]
+   * @param {[type]} z [description]
+   */
+  setAlign (x, y, z) {
+    var align = [x, y, z];
+
+    if (! _.isEqual(align, this._styleCache.transform.translate3d)) {
+      this._styleCache.transform.translate3d = align;
+      this.applyTransform();
+    }
+  }
+
+  /**
+   * [setMatrix3d description]
+   * @param {[type]} matrix [description]
+   */
+  setMatrix3d (matrix){
+    // console.log(matrix);
+    // console.log(this._styleCache.transform.matrix3d);
+
+    if (! _.isEqual(this._styleCache.transform.matrix3d, matrix)) {
+
+      this._styleCache.transform.matrix3d = matrix;
+      this.applyTransform();
+    }
+  }
+
+  /**
+   * [applyTransform description]
+   * @return {[type]} [description]
+   */
+  applyTransform (){
+    var translate3d = this._styleCache.transform.translate3d;
+    var matrix3d = this._styleCache.transform.matrix3d;
+
+    var transform = `
+      translate3d(
+        ${ Utility.applyCSSLabel(translate3d[0], '%') },
+        ${ Utility.applyCSSLabel(translate3d[1], '%') },
+        ${ Utility.applyCSSLabel(translate3d[2], '%') }
+      )
+
+      matrix3d(
+        ${ Utility.epsilon(  matrix3d[0]  ) },
+        ${ Utility.epsilon(  matrix3d[1]  ) },
+        ${ Utility.epsilon(  matrix3d[2]  ) },
+        ${ Utility.epsilon(  matrix3d[3]  ) },
+        ${ Utility.epsilon(- matrix3d[4]  ) },
+        ${ Utility.epsilon(- matrix3d[5]  ) },
+        ${ Utility.epsilon(- matrix3d[6]  ) },
+        ${ Utility.epsilon(- matrix3d[7]  ) },
+        ${ Utility.epsilon(  matrix3d[8]  ) },
+        ${ Utility.epsilon(  matrix3d[9]  ) },
+        ${ Utility.epsilon(  matrix3d[10] ) },
+        ${ Utility.epsilon(  matrix3d[11] ) },
+        ${ Utility.epsilon(  matrix3d[12] ) },
+        ${ Utility.epsilon(  matrix3d[13] ) },
+        ${ Utility.epsilon(  matrix3d[14] ) },
+        ${ Utility.epsilon(  matrix3d[15] ) }
+      )
+    `;
+
+    console.log(transform);
+
+    this.applyStyle('transform', transform);
+  }
+
+  /**
+   * [applyStyle description]
+   * @param  {[type]} property [description]
+   * @param  {[type]} value    [description]
+   * @return {[type]}          [description]
+   */
+  applyStyle (property, value) {
+    this.element.style[property] = value;
+  }
+
+  /**
    * [setClasses description]
    *
    * @todo check to see if updating classes name causes layout thrashing
@@ -183,18 +337,38 @@ class Node extends THREE.Object3D {
     var changed = false;
 
     for (var c of classes) {
-
       // If the class isn't already in the class cache add it
       if (this._classes.indexOf(c) == -1) {
         this._classes.push(c);
         changed = true;
       }
-
     }
 
     // If the classes have changed update element
     if (changed)
       this.element.className = this._classes.join(" ");
+  }
+
+  /**
+   * [render description]
+   *
+   * @method
+   * @memberOf Node
+   * @param  {[type]} camera [description]
+   * @return {[type]}        [description]
+   */
+  render (scene) {
+    this.setMatrix3d(this.matrixWorld.elements);
+
+    // If Node isn't mounted.. mount it to the camera element
+    if (this.element.parentNode !== scene.camera.element) {
+      scene.camera.element.appendChild(this.element);
+    }
+
+    // Render Children
+    for (var child of this.children){
+      child.render(scene);
+    }
   }
 }
 

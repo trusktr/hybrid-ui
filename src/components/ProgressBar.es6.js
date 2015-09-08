@@ -13,7 +13,8 @@ class ProgressBar extends Node {
   /**
    * @constructor
    */
-  constructor () {
+  constructor (options) {
+    super(options);
 
     this.setClasses([CSS_CLASS_PROGRESS_BAR]);
 

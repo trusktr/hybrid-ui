@@ -12,8 +12,8 @@ class Full extends Node {
   /**
    * @constructor
    */
-  constructor () {
-    super(this);
+  constructor (options) {
+    super(options);
 
     this.setClasses(['layouts-full']);
 

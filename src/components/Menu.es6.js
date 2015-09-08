@@ -15,6 +15,7 @@ class Menu extends Node {
    *
    */
   constructor (properties) {
+    super(properties);
 
     this.setClasses([CSS_CLASS_MENU]);
 

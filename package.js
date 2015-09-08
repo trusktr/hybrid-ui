@@ -33,10 +33,11 @@ Package.on_use(function (api) {
     'lib/rate-limit.js',
 
     // Engine
+    'src/engine/Utility.es6.js',
     'src/engine/Curve.es6.js',
     'src/engine/Node.es6.js',
     'src/engine/Sprite.es6.js',
-    'src/engine/Renderer.es6.js',
+    'src/engine/Camera.es6.js',
     'src/engine/Scene.es6.js',
 
     // Core Components
@@ -59,9 +60,10 @@ Package.on_use(function (api) {
     'src/components/ScrollView.es6.js',
     'src/components/Modal.es6.js',
     'src/components/Menu.es6.js',
-    'src/components/TabBar.es6.js',
-    'src/components/ListItem.es6.js',
+    'src/components/tabs/TabBar.es6.js',
+    'src/components/lists/ListItem.es6.js',
     'src/components/Header.es6.js',
+    'src/components/Footer.es6.js',
     'src/components/ProgressBar.es6.js',
 
     // Layouts

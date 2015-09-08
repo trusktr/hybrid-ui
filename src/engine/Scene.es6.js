@@ -1,4 +1,8 @@
-var Renderer = HybridUI.engine.Renderer;
+var Camera = HybridUI.engine.Camera;
+var Utility = HybridUI.engine.Utility;
+
+const CSS_CLASS_SCENE  = 'hybrid-dom-scene';
+
 
 /**
  * Scene Class
@@ -11,23 +15,26 @@ class Scene {
    * @constructor
    */
   constructor () {
-    this._width = window.innerWidth;
-    this._height = window.innerHeight;
-    this._domParent = 'body';
+    this._width = 0;
+    this._height = 0;
+    this._parentElement = 'body';
+    this.element = document.createElement('div');
+    this.element.className = CSS_CLASS_SCENE;
 
     // Add Scene
     this._scene = new THREE.Scene();
 
     // Add Camera
-    this._camera = new THREE.PerspectiveCamera(40, this._width / this._height, 1, 10000);
-    this._camera.position.z = 3000;
+    this.camera = new Camera();
 
-    // Add Renderer
-    this._renderer = new Renderer();
-    this._renderer.setSize(this._width, this._height);
+    // Append camera element to scene
+    this.element.appendChild(this.camera.element);
 
-    // Inject Scene into DOM
-    $(this._domParent).append(this._renderer.domElement);
+    // Mount Scene
+    this.mount();
+
+    // Set Size
+    this.setSize(window.innerWidth, window.innerHeight);
 
     // Register window resize hook
     window.addEventListener('resize', this._onWindowResize.bind(this), false);
@@ -51,14 +58,64 @@ class Scene {
   }
 
   /**
-   * Method to render the scene
+   * [applyStyle description]
+   * @param  {[type]} property [description]
+   * @param  {[type]} value    [description]
+   * @return {[type]}          [description]
+   */
+  applyStyle (property, value) {
+    this.element.style[property] = value;
+  }
+
+  /**
+   * [render description]
    *
    * @method
-   * @memberof Scene
-   * @return {null}
+   * @memberOf Renderer
+   * @param  {[type]} scene  [description]
+   * @param  {[type]} camera [description]
+   * @return {[type]}        [description]
    */
   render () {
-    this._renderer.render(this._scene, this._camera);
+    var camera = this.camera.get();
+
+    var fov = 0.5 / Math.tan(THREE.Math.degToRad(camera.fov * 0.5 )) * this._height;
+
+    if (this.camera.fov !== fov) {
+      this.applyStyle('perspective', fov + "px");
+      this.camera.fov = fov;
+    }
+
+    this._scene.updateMatrixWorld();
+
+    if (camera.parent === undefined) camera.updateMatrixWorld();
+    camera.matrixWorldInverse.getInverse(camera.matrixWorld);
+
+    this.camera.setMatrix3d(camera.matrixWorldInverse.elements);
+    this.camera.setAlign(this._width / 2, this._height / 2, fov);
+
+    for (var child of this._scene.children){
+      child.render(this);
+    }
+  }
+
+
+  /**
+   * [setSize description]
+   *
+   * @method
+   * @memberOf Renderer
+   * @param {[type]} width  [description]
+   * @param {[type]} height [description]
+   */
+  setSize (width, height) {
+    this._width = width;
+    this._height = height;
+
+    this.applyStyle('width', width + 'px');
+    this.applyStyle('height', height + 'px');
+
+    this.camera.setSize(width, height)
   }
 
   /**
@@ -89,12 +146,23 @@ class Scene {
     this._width = window.innerWidth;
     this._height = window.innerHeight;
 
-    this._camera.aspect = this._width / this._height;
-    this._camera.updateProjectionMatrix();
+    var camera = this.camera.get();
 
-    this._renderer.setSize(this._width, this._height);
+    camera.aspect = this._width / this._height;
+    camera.updateProjectionMatrix();
+
+    this.setSize(this._width, this._height);
 
     this.render();
+  }
+
+
+  /**
+   * Inject scene into DOM
+   * @return {[type]} [description]
+   */
+  mount () {
+    $(this._parentElement).append(this.element);
   }
 
   /**
@@ -105,7 +173,7 @@ class Scene {
    * @return {null}
    */
   addTrackballControls () {
-    this._controls = new THREE.TrackballControls(this._camera, this._renderer.domElement);
+    this._controls = new THREE.TrackballControls(this.camera.get(), this.element);
     this._controls.rotateSpeed = 0.5;
     this._controls.minDistance = 500;
     this._controls.maxDistance = 6000;

@@ -14,7 +14,7 @@ class Swapper extends Node {
    * @constructor
    */
   constructor (options) {
-    super(this);
+    super(options);
 
     this.setClasses([CSS_CLASS_SWAPPER]);
 
