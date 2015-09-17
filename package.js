@@ -19,6 +19,7 @@ Package.on_use(function (api) {
     'underscore',
     'infinitedg:tween',
     'peerlibrary:async',
+    'rocket:module',
     'grigio:babel'
   ],['client']);
 
